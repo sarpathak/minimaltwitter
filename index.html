@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Tweet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        #tweet-box {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #tweet-text {
+            width: 100%;
+            height: 100px;
+            resize: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #char-count {
+            text-align: right;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        #tweet-button {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="tweet-box">
+        <textarea id="tweet-text" placeholder="What's happening?" maxlength="280"></textarea>
+        <div id="char-count">280</div>
+        <button id="tweet-button">Tweet</button>
+    </div>
+
+    <script>
+        const tweetText = document.getElementById('tweet-text');
+        const charCount = document.getElementById('char-count');
+
+        function updateCharCount() {
+            const remaining = 280 - tweetText.value.length;
+            charCount.textContent = remaining;
+        }
+
+        function postTweet() {
+            if (tweetText.value.trim() !== '') {
+                const twitterIntentUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText.value)}`;
+                window.location.href = twitterIntentUrl;
+                tweetText.value = '';
+                updateCharCount();
+            }
+        }
+
+        tweetText.addEventListener('input', updateCharCount);
+
+        tweetText.addEventListener('keyup', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                postTweet();
+            }
+        });
+
+        // For mobile devices, post tweet when the textarea loses focus
+        tweetText.addEventListener('blur', postTweet);
+    </script>
+</body>
+</html>
